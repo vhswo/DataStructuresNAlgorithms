@@ -1,0 +1,230 @@
+#include<stdio.h>
+#include<list>
+#include<Windows.h>
+
+
+#define NAME_SIZE 32
+#define ADDR_SIZE 128
+
+typedef struct node
+{
+	char name[NAME_SIZE];
+	int age;
+	char address[ADDR_SIZE];
+	int Kor, Eng, Math, Sum;
+	float Float;
+	char Level;
+
+}node;
+
+int Menu()
+{
+	int iInput;
+	system("cls");
+	printf("<<<==== 메뉴 ====>>>>\n\n");
+	printf("1.학생 등록\n");
+	printf("2.학생 검색\n");
+	printf("3.학생 목록\n");
+	printf("4.학생 수정\n");
+	printf("5.학생 삭제\n");
+	printf("6.종료\n");
+	printf("입력 : ");
+
+	scanf("%d", &iInput);
+
+	return iInput;
+}
+
+void SetLevel(node* st)
+{
+	st->Sum = (st->Eng) + (st->Kor) + (st->Math);
+	st->Float = st->Sum / 3;
+	if (st->Float > 90)
+		st->Level = 'A';
+	else if (st->Float > 80)
+		st->Level = 'B';
+	else if (st->Float > 70)
+		st->Level = 'C';
+	else if (st->Float > 60)
+		st->Level = 'D';
+	else
+		st->Level = 'F';
+}
+
+node* AddSt(node* st) 
+{
+	st = (node*)malloc(sizeof(node));
+
+		printf("학생 이름 입력 : ");
+		scanf("%s", st->name);
+		printf("%s 학생 나이 입력 : ", st->name);
+		scanf("%d", &st->age);
+		printf("%s 학생 주소 입력 : ", st->name);
+		scanf("%s", st->address);
+		printf("%s 학생 국어 입력 : ", st->name);
+		scanf("%d", &st->Kor);
+		printf("%s 학생  영어 입력 : ", st->name);
+		scanf("%d", &st->Eng);
+		printf("%s 학생 수학 입력 : ", st->name);
+		scanf("%d", &st->Math);
+		SetLevel(st);
+		return st;
+}
+
+void Printf(std::list<node>::iterator stPrintf)
+{
+	printf("학생 이름 : %s\n", stPrintf->name);
+	printf("학생 나이 : %d\n", stPrintf->age);
+	printf("학생 주소 : %s\n", stPrintf->address);
+	printf("영어 점수 : %d\n", stPrintf->Eng);
+	printf("국어 점수 : %d\n", stPrintf->Kor);
+	printf("수학 점수 : %d\n", stPrintf->Math);
+	printf("합계 점수 : %d\n", stPrintf->Sum);
+	printf("평균 점수 : %.2f\n", stPrintf->Float);
+	printf("등급 : %c\n", stPrintf->Level);
+}
+
+void PrintfALLStList(std::list<node> iList)
+{
+	printf("======= Infomation========\n");
+	for(std::list<node>::iterator iter = iList.begin(); iter !=iList.end(); iter++)
+	{
+		Printf(iter);
+		printf("=============================\n");
+	}
+	
+	system("pause");
+}
+
+std::list<node>::iterator Search(std::list<node>* iList, char name[NAME_SIZE])
+{
+	for (std::list<node>::iterator iter = iList->begin(); iter != iList->end(); iter++)
+	{
+		if (strcmp(iter->name,name) == 0)
+			return iter;
+	}
+	return iList->end();
+}
+
+void Modify(std::list<node>* iList)
+{
+	char cName[NAME_SIZE];
+	int iMenu;
+	printf("수정할 학생의 이름 : ");
+	scanf("%s", cName);
+	std::list<node>::iterator FindIter = Search(iList, cName);
+	while(FindIter->name != cName)
+	{
+		system("cls");
+		Printf(FindIter);
+		printf("무엇을 수정하시겠습니까?\n");
+		printf("1.이름\t2.나이\t3.주소\t4.성적\t5.종료");
+		scanf("%d", &iMenu);
+		switch (iMenu)
+		{
+		case 1:
+			printf("현재 이름 : %s\n", FindIter->name);
+			printf("변경할 이름 : ");
+			scanf("%s", FindIter->name);
+			break;
+		case 2:
+			printf("현재 나이 : %d\n", FindIter->age);
+			printf("변경할 나이 : ");
+			scanf("%d", &FindIter->age);
+			break;
+		case 3:
+			printf("현재 주소 : %s\n", FindIter->address);
+			printf("변경할 주소 : ");
+			scanf("%s", FindIter->address);
+			break;
+		case 4:
+			printf("현재 점수\n국어 : %d\t영어 : %d\t수학 : %d\n",FindIter->Kor, FindIter->Eng, FindIter->Math);
+			printf("변경할 국어 점수 : ");
+			scanf("%d", &FindIter->Kor);
+			printf("변경할 영어 점수 : ");
+			scanf("%d", &FindIter->Eng);
+			printf("변경할 수학 점수 : ");
+			scanf("%d", &FindIter->Math);
+			break;
+		case 5:
+			return;
+		}
+	}
+
+
+}
+
+void SearchSt(std::list<node>* iList)
+{
+	char cName[NAME_SIZE];
+	printf("찾을 학생의 이름 : ");
+	scanf("%s", cName);
+	std::list<node>::iterator FindIter = Search(iList,cName);
+	if(FindIter != iList->end())
+	{
+		Printf(FindIter);
+	}
+	else
+	{
+		printf("학생을 찾지 못했습니다.");
+	}
+	system("pause");
+}
+
+void Delete(std::list<node>* iList)
+{
+	char cName[NAME_SIZE];
+	printf("삭제할 학생 이름 : ");
+	scanf("%s", cName);
+	std::list<node>::iterator FindIter = Search(iList, cName);
+	if (FindIter != iList->end())
+		iList->erase(FindIter);
+	else
+		printf("학생을 찾지 못했습니다.");
+}
+
+void AllDelete(std::list<node>* iList)
+{
+	iList->clear();
+	printf("삭제 확인 : %d\n",iList->size());
+	system("pause");
+}
+
+void main()
+{
+
+	std::list<node> iList;
+	node *st = NULL;
+	//인트 자리에 노드
+
+	char iInput[NAME_SIZE] = { 0 };
+	while (1)
+	{
+		switch (Menu())
+		{
+		case 1:
+			st = AddSt(st);
+			iList.push_back((*st));
+
+			break;
+		case 2:
+			SearchSt(&iList);
+			break;
+		case 3:
+			PrintfALLStList(iList);
+			break;
+
+		case 4:
+			Modify(&iList);
+			break;
+
+		case 5:
+			Delete(&iList);
+			break;
+		case 6:
+			AllDelete(&iList);
+
+			return;
+		}
+	}
+}

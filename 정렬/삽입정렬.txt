@@ -1,0 +1,82 @@
+#include<stdio.h>
+#include<time.h>
+#include<stdlib.h>
+
+#define MAXNUM 10
+#define SORT 2
+#define LOW 3
+
+int iMenu()
+{
+	int iMenu;
+	printf("1. 번호 생성\n");
+	printf("2. 오름차순 정렬\n");
+	printf("3. 내림차순 정렬\n");
+	printf("4.종료\n");
+	printf("선택 : ");
+	scanf("%d", &iMenu);
+	return iMenu;
+}
+
+void PrintNum(int RandNum[MAXNUM])
+{
+	for (int i = 0; i <= MAXNUM -1; i++)
+	{
+		printf("%d 번수 : %d\n", i, RandNum[i]);
+	}
+	system("pause");
+	system("cls");
+}
+
+void RandTenNum(int RandNum[MAXNUM])
+{
+	for (int i = 0; i <= MAXNUM -1; i++)
+	{
+		RandNum[i] = rand() % 100 + 1;
+	}
+	PrintNum(RandNum);
+}
+
+void SortOrLow_Num(int RandNum[MAXNUM], int Num)
+{
+	int tmp;
+	for (int i = 1; i < MAXNUM; i++)
+	{
+		for (int j = 0; j <= i-1; j++)
+		{
+			if ((Num == SORT && RandNum[i] < RandNum[j]) || (Num == LOW && RandNum[i] > RandNum[j]))
+			{
+				tmp = RandNum[i];
+				RandNum[i] = RandNum[j];
+				RandNum[j] = tmp;
+			}
+		}
+	}
+	PrintNum(RandNum);
+}
+
+void main()
+{
+	int RandNum[MAXNUM] = { 0 };
+	
+	srand((unsigned)time(NULL));
+
+	while(1)
+	{	
+		switch (iMenu())
+		{
+		case 1:
+			RandTenNum(RandNum);
+			break;
+		case 2:
+			SortOrLow_Num(RandNum, SORT);
+			break;
+		case 3:
+			SortOrLow_Num(RandNum,LOW);
+			break;
+		case 4:
+			return;
+		}
+	}
+
+}

@@ -1,0 +1,86 @@
+#include<stdio.h>
+#include<Windows.h>
+#include<stdlib.h>
+
+typedef struct Number
+{
+	int Num;
+	struct Number* list;
+}Number;
+
+int OutputMenu()
+{
+	system("cls");
+	int Iinput;
+	printf("=====Queue System=====\n");
+	printf("1. Enqueue\n");
+	printf("2. Dequeue\n");
+	printf("3. Exit\n");
+	printf("======================\n");
+	printf("입력 : ");
+	scanf("%d", &Iinput);
+
+	return Iinput;
+}
+
+Number* Enqueue(Number** Front, Number* Rear)
+{
+	Number *NewNode = (Number*)malloc(sizeof(Number));
+	printf("데이터 입력 : ");
+	scanf("%d", &NewNode->Num);
+	NewNode->list = NULL;
+
+	if ((*Front) == NULL)
+	{
+		(*Front) = NewNode;
+		Rear = NewNode;
+	}
+	else
+	{
+		Rear->list = NewNode;
+	}
+
+	return NewNode;
+
+}
+
+Number* Dequeue(Number* Front,Number* Rear)
+{
+	if (Front == NULL)
+	{
+		printf("데이터가 없습니다");
+	}
+	else
+	{
+		printf("Front : %d\t Rear : %d\n", Front->Num, Rear->Num);
+		Number* tmp;
+		tmp = Front;
+		Front = Front->list;
+		free(tmp);
+	}
+
+	return Front;
+}
+
+
+void main()
+{
+	Number* Rear =NULL, *Front = NULL;
+	while (1)
+	{
+		switch (OutputMenu())
+		{
+		case 1:
+			Rear = Enqueue(&Front, Rear);
+			break;
+		case 2:
+			Front = Dequeue(Front, Rear);
+			system("pause");
+			break;
+		case 3:
+			while (Front != NULL)
+				Front = Dequeue(Front, Rear);
+			return;
+		}
+	}
+}

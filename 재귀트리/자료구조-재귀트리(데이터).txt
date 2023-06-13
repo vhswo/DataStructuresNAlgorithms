@@ -1,0 +1,265 @@
+#include<stdio.h>
+#include<malloc.h>
+#include<string.h>
+#include<Windows.h>
+
+typedef struct Node
+{
+	int Data;
+	struct Node* Left;
+	struct Node* Right;
+}Node;
+
+int Init()
+{
+	system("cls");
+	int iInput;
+	printf("1.data 추가\n");
+	printf("2.data 삭제\n");
+	printf("3.preorder\n");
+	printf("4.inorder\n");
+	printf("5.postorder\n");
+	printf("6.data 검색\n");
+	printf("7.종료\n");
+	printf(">>>>>>");
+	scanf("%d", &iInput);
+
+	return iInput;
+}
+
+Node* NewNode(int Num)
+{
+	Node* tmp;
+	tmp = (Node*)malloc(sizeof(Node));
+	tmp->Data = Num;
+	tmp->Left = NULL;
+	tmp->Right = NULL;
+
+	return tmp;
+}
+
+Node* insert(Node* data, int Num)
+{
+	if (data == NULL)
+	{
+		data = NewNode(Num);
+
+		return data;
+	}
+
+	if (Num == data->Data)
+	{
+		printf("이미 있는 데이터 입니다.");
+		system("pause");
+	}
+	else if (Num < data->Data)
+	{
+		data->Left = insert(data->Left, Num);
+	}
+	else
+	{
+		data->Right = insert(data->Right, Num);
+	}
+	return data;
+}
+
+void Preorder(Node* head)
+{
+	if (head == NULL)
+		return;
+	printf("%d, ", head->Data);
+
+	if (head->Left != NULL)
+		Preorder(head->Left);
+	if (head->Right != NULL)
+		Preorder(head->Right);
+
+}
+
+void Inorder(Node* head)
+{
+	if (head == NULL)
+		return;
+
+	if (head->Left == NULL && head->Right == NULL)
+	{
+		printf("%d, ", head->Data);
+		return;
+	}
+
+	if (head->Left != NULL)
+		Inorder(head->Left); \
+
+		printf("%d, ", head->Data);
+
+	if (head->Right != NULL)
+		Inorder(head->Right);
+
+
+}
+
+void Outorder(Node* head)
+{
+	if (head == NULL)
+		return;
+
+	if (head->Left != NULL)
+	{
+		Outorder(head->Left);
+	}
+	if (head->Right != NULL)
+	{
+		Outorder(head->Right);
+	}
+	printf("%d, ", head->Data);
+
+}
+
+Node* Relese(Node* head)
+{
+	if (head == NULL)
+		return 0;
+
+	if (head->Left != NULL)
+	{
+		Relese(head->Left);
+	}
+	if (head->Right != NULL)
+	{
+		Relese(head->Right);
+	}
+
+	free(head);
+	return 0;
+}
+
+void Search(Node* head, int Num)
+{
+	if (head == NULL)
+		return;
+
+	if (Num == head->Data)
+	{
+		printf("%d", head->Data);
+	}
+	else if (Num < head->Data)
+	{
+		Search(head->Left, Num);
+	}
+	else
+	{
+		Search(head->Right, Num);
+	}
+}
+
+int FindMin(Node* nord)
+{
+	if (nord->Left != NULL)
+		return FindMin(nord->Left);
+
+	return nord->Data;
+}
+
+Node* Delete(Node* nord, int Num);
+Node* SetDelete(Node* nord)
+{
+	Node* Deletetmp;
+	Deletetmp = nord;
+	if (nord->Left == NULL && nord->Right == NULL)
+	{
+		nord = nord->Right;
+		free(Deletetmp);
+		return nord;
+	}
+	else if (nord->Left != NULL && nord->Right == NULL)
+	{
+		nord = nord->Left;
+		free(Deletetmp);
+		return nord;
+
+	}
+	else if (nord->Left == NULL && nord->Right != NULL)
+	{
+		nord = nord->Right;
+		free(Deletetmp);
+		return nord;
+	}
+	else
+	{
+		nord->Data = FindMin(nord->Right);  
+		Delete(nord->Right, nord->Data);
+
+		return nord;
+	}
+}
+
+
+Node* Delete(Node* nord, int Num)
+{
+	if (nord == NULL)
+		return 0;
+
+	if (nord->Data == Num)
+	{
+		nord = SetDelete(nord);
+		return nord;
+	}
+	else if (nord->Data < Num)
+	{
+		nord->Right = Delete(nord->Right, Num);
+		return nord;
+	}
+	else
+	{
+		nord->Left = Delete(nord->Left, Num);
+		return nord;
+	}
+
+}
+
+
+void main()
+{
+	int iInput;
+	Node* head = NULL;
+	while (1)
+	{
+		switch (Init())
+		{
+		case 1:
+			printf("data 입력 : ");
+			scanf("%d", &iInput);
+			head = insert(head, iInput);
+			break;
+		case 2:
+			printf("삭제할 데이터 입력 : \n");
+			scanf("%d", &iInput);
+			head = Delete(head, iInput);
+			break;
+		case 3:
+			Preorder(head);
+			system("pause");
+			break;
+		case 4:
+			Inorder(head);
+			system("pause");
+			break;
+		case 5:
+			Outorder(head);
+			system("pause");
+			break;
+		case 6:
+			printf("data 입력 : ");
+			scanf("%d", &iInput);
+			Search(head, iInput);
+			system("pause");
+			break;
+		case 7:
+
+			Relese(head);
+			return;
+		};
+	}
+
+
+}

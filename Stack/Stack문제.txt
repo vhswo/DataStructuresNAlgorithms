@@ -1,0 +1,75 @@
+#include<stdio.h>
+#include<Windows.h>
+#include<stdlib.h>
+
+typedef struct Number
+{
+	int Num;
+	struct Number* list;
+}Number;
+
+int OutputMenu()
+{
+	system("cls");
+	int Iinput;
+	printf("=====Stack System=====\n");
+	printf("1. Push\n");
+	printf("2. Pop\n");
+	printf("3. Exit\n");
+	printf("======================\n");
+	printf("입력 : ");
+	scanf("%d", &Iinput);
+
+	return Iinput;
+}
+
+Number* Push(Number* top)
+{
+	Number* NewNode = (Number*)malloc(sizeof(Number));
+	printf("데이터 입력 : ");
+	scanf("%d", &NewNode->Num);
+	NewNode->list = top;
+
+	return NewNode;
+}
+
+Number* Pop(Number* top)
+{
+	if (top == NULL)
+	{
+		printf("데이터가 없습니다");
+	}
+	else
+	{
+		printf("데이터 값 : %d\n", top->Num);
+		Number* tmp;
+		tmp = top;
+		top = top->list;
+		free(tmp);
+	}
+
+	return top;
+}
+
+
+void main()
+{
+	Number* Top = NULL;
+	while (1)
+	{
+		switch (OutputMenu())
+		{
+		case 1:
+			Top = Push(Top);
+			break;
+		case 2:
+			Top = Pop(Top);
+			system("pause");
+			break;
+		case 3:
+			while(Top != NULL)
+				Top = Pop(Top);
+			return;
+		}
+	}
+}

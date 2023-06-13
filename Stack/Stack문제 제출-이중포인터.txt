@@ -1,0 +1,93 @@
+#include<stdio.h>
+#include<Windows.h>
+#include<stdlib.h>
+
+typedef struct Number
+{
+	int Num;
+	struct Number* list;
+}Number;
+
+int OutputMenu()
+{
+	system("cls");
+	int Iinput;
+	printf("=====Stack System=====\n");
+	printf("1. Push\n");
+	printf("2. Pop\n");
+	printf("3. Exit\n");
+	printf("======================\n");
+	printf("입력 : ");
+	scanf("%d", &Iinput);
+
+	return Iinput;
+}
+
+void Push(Number** top)
+{
+	Number *add;
+
+	int Iinput;
+	add = (Number*)malloc(sizeof(Number));
+	printf("데이터 입력 : ");
+	scanf("%d", &Iinput);
+	add->Num = Iinput;
+	add->list = (*top);
+	(*top) = add;
+	
+}
+
+void Pop(Number** top)
+{
+	Number* tmp;
+	tmp = (*top);
+	
+
+	if ((*top) != NULL )
+	{
+		printf("%d\n", (*top)->Num);
+		
+		(*top) = (*top)->list;
+		free(tmp);
+		system("pause");
+	}
+	else
+	{
+		printf("파일이 없습니다.");
+		system("pause");
+	}
+}
+
+void Release(Number** top)
+{
+	Number* tmp;
+	
+	while ((*top) != NULL)
+	{
+		tmp = (*top);
+		(*top) = (*top)->list;
+		free(tmp);
+	}
+	system("pause");
+
+}
+
+void main()
+{
+	Number* top = NULL;
+	while (1)
+	{
+		switch (OutputMenu())
+		{
+		case 1:
+			Push(&top);
+			break;
+		case 2:
+			Pop(&top);
+			break;
+		case 3:
+			Release(&top);
+			return;
+		}
+	}
+}
